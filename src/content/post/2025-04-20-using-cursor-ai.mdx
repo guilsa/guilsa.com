@@ -3,12 +3,44 @@ title: "Using Cursor AI"
 publishDate: "20 April 2025"
 slug: "using-cursor-ai"
 description: "Reviewing the Cursor docs. Here were the most interesting things I discovered."
-tags: ["cursor, ai, coding"]
+tags: ["cursor", "ai", "coding"]
 ---
 
-Let's get started.
+Good morning!
 
-### Project Rules
+In this post I'll talk briefly about my personal experience and then jump into a few interesting nuggets I found while reading the Cursor docs.
+
+## Personal Experiences
+
+I used Cursor all day the other day for an Ansible project. I kind of felt that Cursor is like Github Copilot. Not impressed there. Was more impressed about AI helping me, in general. But I couldn't really tell how much it was doing under-the-hood that was impressive, versus the AI model itself. 
+
+I was able to turn a dream project I've been putting off for 2 years around in less than 24 hrs!
+
+The big question is: would I purchase a year subscription of Cursor? The answer is a heck yes. I wouldn't say the same about Github Copilot (a few months ago, at least).
+
+## Surprises (some back-of-the-napkin math)
+
+In one full-day of work, I used 117 / 150 premium model requests. The Pro plan gives you 500 premium requests per month. 
+
+This means that in a single day, I used an astonishing 24% of the monthly plan (assuming I was paying). I'd say it was about 4-5 hours of work.
+
+The “auto-select” was enabled all the time (Cursor does this to help you select the best premium model). They say that “auto-select” detects degraded output performance. In other words, you're privileged if you're using this.
+
+If your monthly quota is used up too quickly, they have two ways to mitigate that ([docs](https://docs.cursor.com/account/plans-and-usage)):
+
+> ... when users run out of fast premium credits, they are moved to a slow pool. 
+
+## Cursor's docs
+
+With personal thoughts out of the way, let's talk about fun things I discovered after perusing through the "manual".
+
+## Project Rules
+
+Rules are helpful when we need to hard code behaviors into the AI:
+
+> ...you’ve had a conversation where many decisions were made about how the agent should behave. Simply generate the rule and reuse it in the future.
+
+If you're repeating yourself in chat prompts, that's another good use-case.
 
 You can run `/Generate Cursor Rules` from the chat window. I'd be careful and not use this for things that change often.
 
@@ -18,37 +50,25 @@ Rules are written in .mdc and are helpful when:
 * Automating project-specific workflows or templates
 * Standardizing style or architecture decisions
 
-In short, use it to hard-code LLM behavior:
-
-> This is very useful when you’ve had a conversation where many decisions were made about how the agent should behave. Simply generate the rule and reuse it in the future.
-
-Also, you should use rules if you're repeating yourself in the chat prompts. So perhaps wait for that to happen.
-
 Check out [Rules Examples](https://docs.cursor.com/context/rules#examples) for more.
 
-### Ask, Edit, Agent Modes
+## Ask, Edit, Agent Modes
 
 It's important to start by asking why is Agent Mode the default?
 
 When using Agent mode, Cursor will automatically search the web when it needs up-to-date information or additional context. The alternative here would be to use the `@Web` symbol while chatting to tell Cursor to scrape multiple websites to find the best/more recent answers/discussions. In other words, Agent mode uses `@Web` under the hood, if it has to.
 
-Other questions on my mind is often should I toggle between these modes?
-
-### .cursorignore
+## .cursorignore
 
 Cursor already reads from `.gitignore`. Having an `.cursorignore` acts as a way to further restrict things.
 
-### AI Commit Messages
+## AI Commit Messages
 
 The docs specifically mention that **"Cursor will analyze both your current changes and previous commit messages to generate a contextually appropriate message"**. So features like [AI Commit Messages](https://docs.cursor.com/more/ai-commit-message) count against the monthly quota.
 
 Good commit messages tend to be a favorite thing of mine to write manually. It's a way to reflect and explain what was done in simple terms. As well as document it for others. The Cursor monthly quota can be used up quickly, so this is a cool feature that I'd be careful not to over-utilize.
 
-A related question to be explored further:
-
-What are some good ways not to under-utilize or over-utilize Cursor's Cursor functionalities? What's the right balance here? I feel like the answer has to do with building up a mental model of the features and their ROI for you. So test, test, test.
-
-### Beta features
+## Beta Features
 
 What Cursor featues are in beta? As of this writing, Notepads is one. But I have a hunch that this will be refactored, if you will, into another feature set.
 
@@ -61,3 +81,11 @@ According to the doc, Notepads helps define boilerplates (ie. code patterns, sca
 It sounds like like Notepads is something important to dig in deeper. It goes even beyond boilerplate generation or architecture documentation, but defining dev guidelines as well. Each of these are their own topics.
 
 What should I write in Notepads? They mention it should be "documentation that needs to be referenced frequently". So what is the difference between Notepad rules and README.md? Sounds like Notepad helps give the AI context.
+
+## Further explorations
+
+Here were some related questions I had for when there's more time for tinkering:
+
+1. Are too many rules a bad thing? One thing is true: it's one more thing for humans to maintain (with the AI).
+2. How often can you see yourself toggling between Ask/Edit/Agent modes to save on tokens?
+3. What are some good ways not to under-utilize or over-utilize Cursor's functionalities? What's the right balance here? I feel like the answer has to do with building up a mental model of the features and their ROI for you. So test, test, test.
