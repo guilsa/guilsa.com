@@ -1,0 +1,72 @@
+---
+import PageLayout from "@/layouts/Base";
+import PostPreview from "@/components/blog/PostPreview";
+import SocialList from "@/components/SocialList";
+import { getAllPosts, sortMDByDate } from "@/utils";
+
+const MAX_POSTS = 10;
+const allPosts = await getAllPosts();
+const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS);
+
+const cactusTech: Array<{ title: string; desc: string; role: string; href: string }> = [
+	{
+		title: "Zero Deploys",
+		desc: "Ansible based playbook for zero-downtime deploys",
+		role: "Creator",
+		href: "https://github.com/guilsa",
+	},
+];
+---
+
+<PageLayout meta={{ title: "Home" }}>
+	<section>
+		<h1 class="title mb-6">Hey!</h1>
+		<p class="mb-4">Hi, I'm Guil Sa.</p>
+		<p class="mb-4">
+			I'm passionate about maintaining large code bases after hyper-growth stages. Focus on
+			craftsmanship and knowledge sharing.
+		</p>
+		<p class="mb-4">
+			Currently working understanding how eng teams can best apply AI to their workflow.
+		</p>
+		<br />
+		<SocialList />
+	</section>
+
+	<section aria-label="Blog post list" class="mt-16">
+		<h2 class="title mb-4 text-xl">Latest Posts</h2>
+		<ul class="space-y-4 sm:space-y-2">
+			{
+				allPostsByDate.map((p) => (
+					<li class="flex flex-col gap-x-2 sm:flex-row">
+						<PostPreview post={p} />
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section class="mt-16">
+		<h2 class="title mb-4 text-xl">Projects</h2>
+		<ul class="space-y-4 sm:space-y-2">
+			{
+				cactusTech.map(({ href, title, desc, role }) => (
+					<li class="flex flex-col gap-2">
+						<div>
+							<a
+								href={href}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="cactus-link inline-block"
+							>
+								{title}
+							</a>
+							<span class="text-sm text-accent"> ({role})</span>
+						</div>
+						<p class="text-sm text-gray-600 dark:text-gray-400">{desc}</p>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</PageLayout>
