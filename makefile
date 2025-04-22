@@ -2,7 +2,7 @@
 
 REMOTE := deploy@racknerd
 LOCAL_DIST := ./dist/
-REMOTE_PATH := /var/www/html/
+REMOTE_PATH := /var/www/html/guilsa.com
 
 deploy:
 	ssh $(REMOTE) "sudo mkdir -p $(REMOTE_PATH) && sudo chown deploy:www-data $(REMOTE_PATH) && sudo chmod 775 $(REMOTE_PATH)"

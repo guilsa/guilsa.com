@@ -24,6 +24,18 @@ I kept “auto-select” enabled all the time (Cursor does this to help you sele
 
 When you exhaust your monthly quota, Cursor moves you to a "slow pool" rather than cutting you off completely ([docs](https://docs.cursor.com/account/plans-and-usage)). Worth noting if you keep "auto-select" on at all times.
 
+At this rate, we're talking about the following:
+
+- 120 premium requests/day; or
+- 60 premium request/day (with Thinking mode); or
+- $100 dollars per month (with Thinking mode)
+
+The lesson for us all: 
+
+- The ROI for a very high quality AI coding assistant is a complex calculation, especially inside large orgs.
+- I highly recommend starting with an experiment.
+- Allocate a $100/dev/month budget.
+
 ## The Documentation
 
 ### Project Rules (.mdc)
@@ -33,15 +45,9 @@ Rules let you hard-code AI behaviors when:
 - Automating repetitive workflows
 - Standardizing architecture decisions
 
-Access them by typing `/Generate Cursor Rules` in chat. Perfect for stable patterns you frequently reference.
-
 ### Agent Modes
 
 There are three working modes. Agent Mode (default) will automatically search the web when needed. It essentially employs the `@Web` capability behind the scenes to get up-to-date information (coding discussiong, etc).
-
-### AI Commit Messages
-
-Cursor analyzes both current changes and previous commits to generate contextually appropriate messages. Since this counts against your monthly quota, use this feature strategically.
 
 ### Notepads (Beta)
 
@@ -54,6 +60,44 @@ Notepads extend beyond `.cursorrules` to define:
 - Development guidelines
 
 Think of them as living documentation specifically designed to guide Cursor's outputs.
+
+## Tips
+
+Let's quickly review some tips!
+
+### Tip 1: Cursor Tools and Agent Mode's Impact on Pricing
+
+[Tools](https://docs.cursor.com/chat/tools) and [Agent mode](https://docs.cursor.com/chat/agent) go hand-in-hand.
+
+With tools, the LLM is able to loop autonomously while chatting with you, exploring your codebase, browse the web, edit your files, and run terminal commands to complete tasks efficiently. **It's an AI-coder on steroids.**
+
+Submitting a request with Agent mode enabled can consume up to 25 of these so called "tool calls" - which in turn will consume exacly one request out of your precious 500 "fast-requests" per month. It's worth noting that Pro plans also have unlimited "slow-requests" per month (although you're put on a queue with lower priority if you over-consume things).
+
+Because Agent mode can be quite helpful, but costly, the Agent will ask you to hit `Continue` if tool calls exceed the 25 limit:
+
+> Agents can perform up to 25 tool calls per session. If this limit is reached, you can press “Continue” to allow additional tool calls (each “Continue” counts as one request).
+
+### Tip 2: Review the Tooltips and Shortcuts!
+
+This is a suddle UI detail in the Cursor IDE, but it helps tremendously! Every button or interactive component in the chat panel, when hovered, provides details like keyboard shortcut as well as a critical message to help guide you. Some models have a pricing 2X factor. They use tooltips to inform you of that so you don't have to go read the docs. Don't miss this!
+
+### Tip 3: Read the CHANGELOG and forum.cursor.com!
+
+CHANGELOGS are wonderful: https://www.cursor.com/changelog.
+
+The [forum](https://forum.cursor.com/top) is actually richer in content than Reddit or Hacker News - as far as I noticed - so perhaps prioritize that.
+
+### Tip 4: Free Models Don't Count Against Premium Quota
+
+For simple tasks like testing or understanding the Cursor IDE, or generating documentation, it is suggested toggling to a non-premium model.
+
+You can get a list of which ones are free on [Cursor's available models](https://docs.cursor.com/settings/models) page.
+
+For example - if `o4-mini` is selected (free), it will not consume your Premium quota. That means you can have unlimited conversations (and have Agent mode fully enabled). Just please, don't use it for coding. It wasn't designed for that.
+
+To toggle across different *modes* and *models* on macOS ([docs](https://docs.cursor.com/kbd)):
+- Cmd + . (⌘.) opens mode menu
+- Cmd + / (⌘/) loops between AI models
 
 ## Questions for Further Exploration
 

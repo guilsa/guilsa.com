@@ -21,7 +21,7 @@
 
 ## About Me
 
-Programmer trying to be a programmer. Not a brogrammer.
+Programmer trying to be a programmer.
 
 ### Current Role & Experience
 
