@@ -1,0 +1,89 @@
+# My experience with mac-dev-playbook
+
+Goals:
+- Install `mac-dev-playbook` (https://github.com/geerlingguy/mac-dev-playbook) on Mac OS.
+
+Outcomes:
+- Understand best-practices (ie. dry runs, undo's or reverting, breaking things on purpose to learn).
+
+Reminders:
+- Read the project's README! It's essential. Check its reference to `full-mac-setup.md`.
+
+TODOs / What I currently have in mind
+- Test whether gui/Library/Application Support/Code/User/settings.json gets synced
+- Jeff uploads his shared SSH private keys to Dropbox
+- After testing this on Mac OS, test dotfiles repo
+  - Find a way to keep host Mac OS .zshrc in sync with dotfiles repository
+
+### What `mac-dev-playbook` does NOT install:
+- `oh-my-zsh`
+- `iterm2`
+Why? Not sure yet.
+
+### First time with mac-dev-playbook? Do this first:
+
+- https://code.visualstudio.com/docs/setup/mac (*OR incorporate my dotfiles here*)
+- https://docs.github.com/en/get-started/git-basics/set-up-git
+- You're ready. Go read the `mac-dev-playbook` README!
+
+### Let's get started. What I did...
+
+Reminder: You run the playbook by invoking `ansible-playbook main.yml` (see README.md).
+
+I copied `default.config.yml` as `config.yml`. I reviewed `default.config.yml`.
+- I don't need Doxygen
+- I looked at main.yml (ie. /tasks/terminal.yml).
+
+### Problems I had:
+- Mac OS warning `"Running pip as the root user can result in broken permissions"`
+	- *No solution*: No Google results related to geerlingguy's projects.
+- When running `ansible-galaxy install -r requirements.yml` I got `zsh: command not found: ansible-galaxy`.
+	- *Solution*: Re-run ``export PATH="$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:$PATH"``
+- When installing XCode inside Mac OS VM (via UTM), 32GB isn't enough - needed 64GB.
+
+### Questions I had:
+- During `mac-dev-playbook` installation, we have to run add Python 3 to our $PATH via `export PATH="$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:$PATH"`. This adds it only to the current cli session and it does not persist. For it to persist, I am aware it needs to be added to my .bashrc file. But on a fresh Mac OS machine, I don't see either .bashrc or .zshrc.
+
+### Logs (can delete):
+
+#### Aug 9
+
+Issue: From Before running `sudo pip3 install --upgrade pip` I get a warning message.
+Context: https://github.com/pypa/virtualenv/issues/988
+Solution: `sudo -H pipinstall virtualenv`
+
+#### Aug 5
+
+Successfully ran project in Mac VM.
+- This geerlingguy's project is incredible. If you fork it and make it your own, it has it's own Github Actions that it will run all the way through things like installing your specified dotfiles repo and testing it on the fly for you (see pipelines for `test the playbook`). This is helpful as you can actually push changes to Github and check if the CI run fails.
+- Run .osx dotfiles step failed with permission denied line 13
+- It sucessfully adopted my own dotfiles from repo and syslinked it on the new VM OS
+- I had to run it a couple of times. Last time I ran it with force (when installing requirements).
+- Homebrew issue - it obviously installed homebrew because it used cask and installed all the apps I asked, but going to a new terminal and typing `brew --version` says command not found.
+  - See `geerlingguy.mac.homebrew`
+
+#### Jul 20
+
+I downloaded Firefox Developer Edition, Dropbox.
+
+
+#### Jul 19
+
+I ran:
+
+1. Run the following command to add Python 3 to your $PATH: `export PATH="$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:$PATH"`
+2. Upgrade Pip: `sudo pip3 install --upgrade pip`
+3. Install Ansible: `pip3 install ansible`
+
+I am now on:
+```bash
+pip3 --version
+pip 25.1.1 from /Library/Python/3.9/site-packages/pip (python 3.9)
+```
+
+I ran:
+
+`ansible-galaxy install -r requirements.yml`
+
+I installed `UTM` (after noticing that the `mac-dev-playbook` README talks about https://mac.getutm.app/ for testing changes to the playbook).
+
