@@ -1,15 +1,15 @@
 ---
-import Giscus from "./comments/Giscus.astro";
-import { siteConfig } from "@/site-config";
+// import Giscus from "./comments/Giscus.astro";
+// import { siteConfig } from "@/site-config";
 
 let commentService = "";
 
-if (siteConfig.comments) {
-	commentService = "giscus";
-}
+// if (siteConfig.comments) {
+// 	commentService = "giscus";
+// }
 ---
 
 <div py-16>
-	{commentService === "giscus" && <Giscus />}
+	<!-- {commentService === "giscus" && <Giscus />} -->
 	{commentService === "" && null}
 </div>
