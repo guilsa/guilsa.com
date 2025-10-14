@@ -1,36 +1,53 @@
 ---
-title: "What to do when you have a high volume of automatically generated Dependabot pull requests"
+title: "Managing a Backlog of Dependabot Security Alerts: A Practical Guide"
 publishDate: "7 November 2024"
-slug: "how-to-triage-dependabot-prs"
+slug: "handling-multiple-dependabot-alerts "
 description: "Always have a plan. Restate the problem. Divide the problem. Start with what you know. Reduce the problem."
-tags: ["security", "github", "dependabot", "automation", "cve"]
+tags: ["dependabot", "dependency-management", "github-security", "vulnerability-management", "automation", "devops", "software-development"]
 ---
 
-This is a guide based on an experience I had recently working in a large codebase with a high volume of Dependabot PRs. The goal is to share a strategy for triaging and merging these PRs in an efficient manner.
+If you've ever opened a repository to find yourself staring at over a hundred Dependabot security alerts, you know that overwhelming feeling of not knowing where to begin. I recently worked through exactly this scenario in a large codebase, and I want to share the approach I developed for triaging and merging these automated pull requests.
 
-Imagine seeing 100 Dependabot alerts on your repository. How do you start fixing them?
+**Understanding the Initial Landscape**
 
-By default, not all alerts will turn into PRs. Github will generate a limited number of PRs out of the +100 alerts. This is already confusing (ie. do you start fixing the 100 alerts, or the limited number of PRs that it generated?). The answer here actually lies in how you can filter the alerts: you can view these Dependabot alerts by filtering by language or level of severity. You actually want to start your entire workflow by level of severity. Then, you'll want to start with the highs and work your way down to lows. This may feel counterintuitive since you might think that the highs are more complex, but that is not necessarily the case. We'll will see why in a minute.
+When you first encounter a large number of Dependabot alerts, there's an important distinction to understand. GitHub doesn't automatically create pull requests for every single alert. Instead, it generates a limited subset of PRs from your total alert count. This creates an immediate question: should you focus on the full list of alerts, or just the PRs that GitHub has already created?
 
-So to recap so far, we focus on fixing the high severity ones. Ok, so what's next?
+The answer becomes clear when you explore how Dependabot organizes its alerts. You can filter these alerts by programming language or by severity level, and this filtering capability reveals your starting point. Your entire workflow should begin by organizing alerts according to their severity level.
 
-It's important to have a good understanding of how Github allows us to manage the high volume of automatically generated pull requests.
+**Starting with High Severity Issues**
 
-The useful commands for the purposes of this exercise are: `@dependabot close`, `@dependabot recreate`, `@dependabot merge`, `@dependabot rebase`.
+Always start with high severity vulnerabilities and work your way down to medium and low severity issues. This may seem counterintuitive at first because you might assume that high severity issues will be more complex.
 
-I was afraid to try out `@dependabot close` thinking that it would never let you re-open them. You should try it. And use it with `@dependabot reopen`. Perhaps this is evident given the options, but it wasn't clear to me at first.
+The actual complexity of a fix doesn't always correlate with its severity rating.
 
-But this is not the most useful command  for our purposes. I gave this example to illustrate the the process is iterative and you can always go back and forth.
+**Mastering Dependabot Commands**
 
-What you really want is the following...
+To work efficiently with a high volume of Dependabot PRs, you need to understand the commands available to you. The key commands are `@dependabot close`, `@dependabot reopen`, `@dependabot recreate`, `@dependabot merge`, and `@dependabot rebase`.
 
-You want to `@dependabot merge` specifically after you've created a test branch so you can do multiple unified releases split by logical groups.
+When I first started this process, I was hesitant to use `@dependabot close` because I worried it would permanently dismiss those PRs. You can freely use it to close PRs and reopen them later with `@dependabot reopen`. Understanding this gave me confidence that the process is iterative and reversible. You're not locked into any single decision.
 
-We're aiming for a release logic here.
+**The Core Strategy: Batching Non-Breaking Changes**
 
-Common sense tells us that if we focus on vulnerabilities that have been patched by non-breaking changes first, it means there's a high chance that our test suite will not break. So that means we can bucket a bunch of these PRs together. So before merging, we want to change the Dependabot PR's target branch (where to merge to) from `main` to the branch feature branch where we can merge all PRs to and test from there.
+The most effective technique I found involves batching multiple dependency updates together for testing and release. Here's how this works in practice.
 
-For PRs that need `@dependabot rebase`, there's also some edge cases.
+Create a dedicated feature branch for testing. This would be linked to your Jira ticket, for instance. Then, instead of merging Dependabot PRs directly into your `main` branch, change each PR's target branch to point to the feature branch. This allows you to merge multiple dependency updates into one place where you can test them collectively before releasing to production.
 
-Since our other strategy above (for merging) says to change the target branch from `main` to our feature branch, Dependabot doesn't play well with the idea of rebasing against a target branch. It will always default back to rebasing against `main`. So that means we want to ignore any PR that requires a rebase for now and leave that for later. In other words, lets say we're working on fixing the high severity, non-breaking changes alerts. In this case, we will be ignoring anything that requires a rebase (otherwise we can't merge anyway), we'll work with your QA team to release the non-breaking changes to production first, and then we can try to rebase. Basically just keeping pushing these off until you see they are rebasable.
+The logic behind this approach is straightforward. Vulnerabilities that have been patched through **non-breaking** version updates are highly unlikely to break your existing test suite. This means you can safely group many of these PRs together. By merging them all into a feature branch, you create a unified release candidate that the QA team can validate as a single unit rather than testing and deploying dozens of individual changes.
 
+**Handling Rebase Requirements**
+
+You'll inevitably encounter some PRs that require rebasing before they can be merged. This introduces a complication with the batch merging strategy I just described.
+
+Dependabot has a quirk in how it handles rebasing. Even when you've changed a PR's target branch to your feature branch, if you request a rebase using `@dependabot rebase`, Dependabot will always rebase against the main branch, not your feature branch. This behavior conflicts with our batching strategy.
+
+The solution is to temporarily set aside any PR that requires rebasing. Test and release the first batch of non-breaking changes to production. After that initial release succeeds, you can return to the PRs that needed rebasing. You'll want to give your team a heads up that you'll be creating various Jira tickets for this.
+
+Assuming that you've helped the team get passed the release point, many of the left over PRs will likely be rebasable without conflicts, or at minimum, the number of conflicting changes will be reduced. It is also likely that this will keep happening (assuming you have a lot of PRs to get through) until you reach a point where all remaining PRs that are higher or medium in severity can be rebased cleanly.
+
+Essentially, you're using a phased approach. Keep pushing the problematic PRs to a later phase until the conditions are right for them to merge cleanly.
+
+**Putting It All Together**
+
+The complete workflow looks like this: Filter your Dependabot alerts by severity level and start with high severity issues. Identify which of these can be resolved through **non-breaking dependency updates**. Create a feature branch for batch testing. Change the target branch of mergeable PRs to your feature branch and merge them there using `@dependabot merge`. Set aside any PRs requiring rebase for a later phase. Test your batched changes thoroughly in the feature branch, then release to production. Rinse and repeat for medium and low severity issues. Always try to return to the PRs you set aside if they weren't capable of being rebased initially, as conditions may have changed and merge conflicts may have been resolved.
+
+This approach transforms an overwhelming flood of automated PRs into a manageable process.
