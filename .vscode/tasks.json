@@ -1,19 +1,21 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Run Deploy Script", // Unique name for this task
-      "type": "npm",
-      "script": "deploy", // Your package.json script name
-      "problemMatcher": [], // Usually empty for deploy scripts
-      "presentation": {
-        "echo": true,
-        "reveal": "always", // Show the terminal
-        "focus": false,
-        "panel": "shared", // Use a shared terminal panel
-        "showReuseMessage": false,
-        "clear": true // Clear terminal before running
-      }
-    }
-  ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Deploy to Production",
+			"type": "shell",
+			"command": "pnpm run deploy",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		}
+	]
 }
