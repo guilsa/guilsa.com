@@ -1,0 +1,22 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { HTMLTag, Polymorphic } from "astro/types";
+import FormattedDate from "../FormattedDate.astro";
+
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
+	writing: CollectionEntry<"writing">;
+	withDesc?: boolean;
+};
+
+const { writing, as: Tag = "div", withDesc = false } = Astro.props;
+console.log('>>>writing', writing)
+const writingDate = writing.data.updatedDate ?? writing.data.publishDate;
+---
+
+<FormattedDate date={writingDate} class="min-w-[120px] text-gray-500" />
+<Tag>
+	<a href={`/writing/${writing.slug}/`} class="cactus-link" rel="prefetch">
+		{writing.data.title}
+	</a>
+</Tag>
+{withDesc && <q class="line-clamp-3 block italic">{writing.data.description}</q>}

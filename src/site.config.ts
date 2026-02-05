@@ -6,8 +6,7 @@ export const siteConfig: SiteConfig = {
 	// Meta property used to construct the meta title property, found in src/components/BaseHead.astro L:11
 	title: "Welcome!",
 	// Meta property used as the default description meta property
-	description:
-		"Passionate about cooking, coding and hanging with friends",
+	description: "Passionate about cooking, coding and hanging with friends",
 	// HTML lang property, found in src/layouts/Base.astro L:18
 	lang: "en-GB",
 	// Meta property, found in src/components/BaseHead.astro L:42
@@ -20,22 +19,6 @@ export const siteConfig: SiteConfig = {
 			month: "short",
 			year: "numeric",
 		},
-	},
-	comments: {
-		// giscus: {
-		// 	repo: "guilsa/blog",
-		// 	repoId: "--",
-		// 	category: "General",
-		// 	categoryId: "--",
-		// 	mapping: "title",
-		// 	strict: "0",
-		// 	reactionsEnabled: "1",
-		// 	emitMetadata: "0",
-		// 	inputPosition: "top",
-		// 	theme: "preferred_color_scheme",
-		// 	lang: "en",
-		// 	loading: "lazy",
-		// },
 	},
 };
 
@@ -52,5 +35,9 @@ export const menuLinks: Array<{ title: string; path: string }> = [
 	{
 		title: "Blog",
 		path: "/posts/",
+	},
+	{
+		title: "Writing",
+		path: "/writing/",
 	},
 ];
