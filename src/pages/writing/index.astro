@@ -18,11 +18,13 @@ const allWritingsByDate = sortMDByDate(allWritings).slice(0, MAX_POSTS);
 	<section aria-label="Blog post list" class="mt-16">
 		<ul class="space-y-4 sm:space-y-2">
 			{
-				allWritingsByDate.map((p) => (
-					<li class="flex flex-col gap-x-2 sm:flex-row">
-						<CreativeWritingPreview writing={p} />
-					</li>
-				))
+				allWritingsByDate
+          .filter((p) => !p.data.draft)
+          .map((p) => (
+            <li class="flex flex-col gap-x-2 sm:flex-row">
+              <CreativeWritingPreview writing={p} />
+            </li>
+          ))
 			}
 		</ul>
 	</section>

@@ -44,11 +44,13 @@ const cactusTech: Array<{ title: string; desc: string; role: string; href: strin
 		<h2 class="title mb-4 text-xl">Latest Posts</h2>
 		<ul class="space-y-4 sm:space-y-2">
 			{
-				allPostsByDate.map((p) => (
-					<li class="flex flex-col gap-x-2 sm:flex-row">
-						<PostPreview post={p} />
-					</li>
-				))
+				allPostsByDate
+          .filter((p) => !p.data.draft)
+          .map((p) => (
+            <li class="flex flex-col gap-x-2 sm:flex-row">
+              <PostPreview post={p} />
+            </li>
+          ))
 			}
 		</ul>
 	</section>
