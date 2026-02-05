@@ -33,11 +33,11 @@ export const menuLinks: Array<{ title: string; path: string }> = [
 		path: "/about/",
 	},
 	{
-		title: "Blog",
+		title: "Tech Blog",
 		path: "/posts/",
 	},
 	{
-		title: "Writing",
+		title: "Creative Writing",
 		path: "/writing/",
 	},
 ];
