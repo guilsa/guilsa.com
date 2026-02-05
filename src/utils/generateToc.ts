@@ -25,6 +25,11 @@ export function generateToc(headings: ReadonlyArray<MarkdownHeading>) {
 		if (heading.depth === 2) {
 			toc.push(heading);
 		} else {
+			// Skip headings deeper than h2 if no h2 exists yet
+			if (toc.length === 0) {
+				return;
+			}
+
 			const lastItemInToc = toc[toc.length - 1]!;
 			if (heading.depth < lastItemInToc.depth) {
 				throw new Error(`Orphan heading found: ${heading.text}.`);
