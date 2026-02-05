@@ -1,0 +1,29 @@
+---
+import PageLayout from "@/layouts/Base";
+import CreativeWritingPreview from "@/components/blog/CreativeWritingPreview";
+import { getAllWritings, sortMDByDate } from "@/utils";
+
+const MAX_POSTS = 10;
+const allWritings = await getAllWritings();
+const allWritingsByDate = sortMDByDate(allWritings).slice(0, MAX_POSTS);
+
+---
+
+<PageLayout meta={{ title: "Home" }}>
+	<section>
+		<h1 class="title mb-6">Creative Writing</h1>
+		<p class="mb-4">Old pieces I discovered in my archives, written circa 2000s.</p>
+	</section>
+
+	<section aria-label="Blog post list" class="mt-16">
+		<ul class="space-y-4 sm:space-y-2">
+			{
+				allWritingsByDate.map((p) => (
+					<li class="flex flex-col gap-x-2 sm:flex-row">
+						<CreativeWritingPreview writing={p} />
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</PageLayout>

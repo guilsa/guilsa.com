@@ -9,7 +9,6 @@ type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
 };
 
 const { writing, as: Tag = "div", withDesc = false } = Astro.props;
-console.log('>>>writing', writing)
 const writingDate = writing.data.updatedDate ?? writing.data.publishDate;
 ---
 
