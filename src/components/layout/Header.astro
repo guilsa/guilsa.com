@@ -40,10 +40,15 @@ const url = new URL(Astro.request.url);
 			class="inline-flex items-center grayscale hover:filter-none sm:relative sm:inline-block"
 			aria-current={url.pathname === "/" ? "page" : false}
 		>
-			<div
-				class="bg-logo dark:inverted me-3 h-10 w-10 sm:absolute sm:start-[-4.5rem] sm:me-0 sm:h-16 sm:w-16"
-			>
-			</div>
+			<model-viewer
+				src="/model.glb"
+				alt="3D model"
+				auto-rotate
+				rotation-per-second="30deg"
+				class="me-3 h-10 w-10 sm:absolute sm:start-[-4.5rem] sm:me-0 sm:h-16 sm:w-16"
+				style="background: transparent;"
+			></model-viewer>
+			<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 			<span class="text-xl font-bold sm:text-2xl">Guil Sa</span>
 		</a>
 		<nav
