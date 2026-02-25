@@ -1,0 +1,5 @@
+---
+# guilsa.com static site configuration
+site_domain: guilsa.com
+site_root: /var/www/html/guilsa.com
+local_dist_path: ../dist
