@@ -9,6 +9,10 @@ type Props = HTMLAttributes<"time"> & {
 
 const { date, dateTimeOptions, ...attrs } = Astro.props;
 
+if (!date) {
+	return;
+}
+
 const postDate = getFormattedDate(date, dateTimeOptions);
 ---
 
