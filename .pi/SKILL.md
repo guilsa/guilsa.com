@@ -3,7 +3,7 @@
 ## How to deploy to production
 
 ```bash
-pnpm deploy
+pnpm build && make deploy
 ```
 
-This runs `pnpm build` then `make deploy` (rsyncs `dist/` to `deploy@racknerd:/var/www/html/guilsa.com`).
+This builds the Astro site then rsyncs `dist/` to `deploy@racknerd:/var/www/html/guilsa.com`.
