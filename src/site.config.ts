@@ -1,24 +1,23 @@
-import type { SiteConfig } from "@/types";
+import type { Site } from "@/types";
 
-export const siteConfig: SiteConfig = {
-	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
-	author: "Guil Sa",
-	// Meta property used to construct the meta title property, found in src/components/BaseHead.astro L:11
-	title: "Welcome!",
-	// Meta property used as the default description meta property
-	description: "Passionate about cooking, coding and hanging with friends",
-	// HTML lang property, found in src/layouts/Base.astro L:18
+export const site: Site = {
+	name: "Guil Sa",
+	title: "Code, craft, and getting things done.",
+	tagline: "Short technical notes for people shipping software.",
+	description:
+		"Concise technical notes on software, systems, product, and building things.",
+	url: "https://guilsa.com",
+	ogImage: "/social-card.png",
 	lang: "en-GB",
-	// Meta property, found in src/components/BaseHead.astro L:42
 	ogLocale: "en_GB",
-	// Date.prototype.toLocaleDateString() parameters, found in src/utils/date.ts.
-	date: {
-		locale: "en-GB",
-		options: {
-			day: "numeric",
-			month: "short",
-			year: "numeric",
-		},
+};
+
+export const dateConfig = {
+	locale: "en-GB",
+	options: {
+		day: "numeric",
+		month: "short",
+		year: "numeric",
 	},
 };
 

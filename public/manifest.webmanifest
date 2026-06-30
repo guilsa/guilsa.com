@@ -1,7 +1,7 @@
 {
-	"name": "guilsa",
+	"name": "Guil Sa's Notes",
 	"short_name": "guilsa",
-	"description": "Website description",
+	"description": "Concise technical notes on software, systems, product, and building things.",
 	"icons": [
 		{
 			"src": "/192x192.png",
@@ -15,7 +15,7 @@
 		}
 	],
 	"start_url": "/",
-	"background_color": "#1d1f21",
-	"theme_color": "#2bbc8a",
+	"background_color": "#10100F",
+	"theme_color": "#10100F",
 	"display": "standalone"
 }

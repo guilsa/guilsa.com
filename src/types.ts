@@ -1,16 +1,12 @@
-export type SiteConfig = {
-	author: string;
+export type Site = {
+	name: string;
 	title: string;
+	tagline?: string;
 	description: string;
+	url: string;
+	ogImage: string;
 	lang: string;
 	ogLocale: string;
-	date: {
-		locale: string | string[] | undefined;
-		options: Intl.DateTimeFormatOptions;
-	};
-	// comments: {
-	// 	giscus: object;
-	// };
 };
 
 export type PaginationLink = {
