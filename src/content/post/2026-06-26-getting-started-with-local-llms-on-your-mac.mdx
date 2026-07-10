@@ -21,6 +21,25 @@ You're ready to swap out OpenRouter for your local Qwen3.6 instance. Type `/mode
 
 **Stay away from pi extensions**. It helps to know about **info stealers** ([1](https://youtu.be/lSa_wHW1pgQ?si=x_lr_3YIMEdYilXC), [2](https://youtu.be/e7SqbgQhQV8?si=JZmvj9Hg_7-tBX2G)) to grasp what's at stake if you ever get hacked. Nowadays, anyone is a target. For example, there's usually no real need to install web search pi extensions. If your model needs to search the internet, instead of doing that, tell it to download data from places that you trust (otherwise you shouldn't download it, right?) to your `/tmp` directory (just tell pi this). Have a conversation with pi about what you pulled from the internet like that. Reason being, unsanitized incoming data is dangerous and it's how you can get hacked. **Don't get hacked**. I have personally seen my agent (using other setups and tools) visit random websites unrelated to my requests. You risk being targeted with a prompt injection. If you really need your local agent to research the web, isolate pi (not the llm server) inside a Docker VM (but try to skip that, don't be so anxious!).
 
+How I start my llama.cpp instance:
+
+```bash
+➜ llama.cpp git:(master) llama serve \
+    -m ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-MTP-GGUF/snapshots/5bc3e238d916f48a861bac2f8a1990a0e9b7e98d/Qwen3.6-35B-A3B-UD-Q5_K_XL.gguf                                                           \
+    --mmproj ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-MTP-GGUF/snapshots/5bc3e238d916f48a861bac2f8a1990a0e9b7e98d/mmproj-F16.gguf \
+    --port 58640 \
+    --host 127.0.0.1 \
+    -c 262144 \
+    --parallel 1 \
+    --flash-attn on \
+    --no-context-shift \
+    --fit on \
+    --jinja \
+    --metrics \
+    --chat-template-kwargs '{"enable_thinking": true, "preserve_thinking": true}' \
+    2>&1 &
+```
+
 Good luck and have fun with your Macbook Pro M5 Pro. It's an amazing machine. Btw, if you want to know why you shouldn't buy 64GB of RAM (it will not make a difference), that'll be in my next post.
 
 I'm job hunting btw. If you need nice people on your team, msg me.
