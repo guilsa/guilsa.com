@@ -1,0 +1,78 @@
+---
+draft: true
+title: "Pi's Input Box Remembers What You Cut"
+publishDate: "22 July 2026"
+slug: "pi-input-remembers-what-you-cut"
+description: "A tour through pi's terminal input component and the Emacs-inspired kill ring and undo that landed in PR #1373 — in plain language."
+tags: ["pi", "terminal", "emacs", "open-source"]
+---
+
+{/*
+Title candidates (pick one or rewrite):
+- "Pi's Input Box Remembers What You Cut"
+- "A Clipboard With a Memory: Inside pi's Input Component"
+- "Cut, Paste, Undo — the Emacs Way, Now in pi"
+- "Pi Harness Input Controls: Kill Ring and Undo"
+*/}
+
+There's a pull request I keep coming back to. It's titled [Add the kill ring and undo features to the Input component (#1373)](https://github.com/earendil-works/pi/pull/1373), and it does exactly what it says — it gives pi's terminal input box a memory for the things you delete, and a way to take those deletions back.
+
+If none of those words ("kill ring", "yank", "Input component") mean anything to you yet, good. That's why I'm writing this. By the end you'll understand what landed, why it matters, and why it borrows from a 40-year-old text editor to do something your everyday clipboard can't.
+
+## The Input component, in plain terms
+
+Whenever you type a message to pi — the line at the bottom of the terminal where your prompt lives — that's the **Input component**. It's a single-line text box with horizontal scrolling, a blinking cursor, and a small bag of keyboard shortcuts. It's small. It's not a full text editor. But it's the surface you touch every single time you talk to the agent, so every keystroke matters.
+
+Before this PR, that input box could do the basics: type, backspace, move the cursor, delete a word, submit. What it *couldn't* do was remember anything you deleted, and it couldn't undo. Delete something by accident and it was gone. That's the gap #1373 closes.
+
+## The problem with ordinary cut and paste
+
+Here's the thing about the clipboard you already know: it holds **one** thing. You cut "hello", then you cut "world", and "hello" is gone forever. The clipboard only ever keeps the most recent item. There's no history, no stack, no way to scroll back through the last five things you cut and pick the one you actually wanted.
+
+Emacs — a text editor older than most of the people reading this — solved this decades ago with something called a **kill ring**. The idea is simple: instead of a clipboard that forgets, keep a small ring of recently deleted text and let the user cycle through it.
+
+## What's a kill ring?
+
+A kill ring is a **clipboard with a memory**. Three behaviors define it:
+
+1. **Kill (cut):** When you delete text the "Emacs way" — killing to the end of the line, killing a word, etc. — the deleted text goes *onto the ring* instead of into the void. Do several kills in a row and they can even *accumulate* into one entry, so "kill word, kill word, kill word" becomes a single chunk you can bring back in one motion.
+2. **Yank (paste):** Pulls the most recent entry out of the ring and drops it at your cursor. Familiar, but note the name: in Emacs-speak "yank" means paste.
+3. **Yank-pop (cycle):** After a yank, hit the yank-pop key and it swaps what you just pasted for the *next* entry in the ring, rotating through older kills. Paste the wrong thing? Tap yank-pop and it walks back through history until you find the one you meant. It's a ring, so it wraps around.
+
+So where your system clipboard is a single slot, the kill ring is a **rotating shelf of recent cuts**. Last-in is first-out on the initial yank, and yank-pop lets you reach further back in time. (If you want to call that LIFO-with-a-cycle, be my guest — but "a ring you spin through" is the part that actually sticks.)
+
+In pi's implementation (see [`kill-ring.ts`](https://github.com/earendil-works/pi/blob/main/packages/tui/src/kill-ring.ts)), the ring is a plain array with three operations — `push`, `peek`, and `rotate` — and an `accumulate` flag that merges consecutive kills into one entry. Tiny code, big payoff.
+
+## And then there's undo
+
+The second half of the PR is **undo**, and it's the feature you'll reach for most. Hit `Ctrl-/` (or whatever your terminal maps undo to) and the input box rolls back to its previous state — text *and* cursor position together.
+
+The mechanism is an [`UndoStack`](https://github.com/earendil-works/pi/blob/main/packages/tui/src/undo-stack.ts): before any mutating action, push a deep-cloned snapshot of `{ value, cursor }` onto the stack. Undo pops one off. There's even **coalescing** — typing a run of word characters records as a *single* undo step, so you don't have to mash undo thirty times to back out of a sentence you just typed. One keystroke undoes the whole word.
+
+## Why pull this from a 40-year-old editor?
+
+You might ask: why not just ship "cut" and "paste" and call it a day? Because the kill ring's metaphors cover cases the plain clipboard can't:
+
+- **Accumulation** — several adjacent kills collapse into one pasteable chunk. Cut a sentence one word at a time, yank it back as one piece.
+- **Cycling** — yank-pop lets you browse your cut history *after* pasting, without re-cutting anything. The plain clipboard forces you to commit to the most recent cut.
+- **Coalesced undo** — your typing history is chunked into word-sized units, so undo feels natural instead of granular-to-the-point-of-useless.
+
+These are ideas Emacs got right in the 1980s, and they're still the best answer to "I deleted the wrong thing, several times, in a row." Porting them into pi's input box is a small, deliberate choice to respect the terminal's lineage rather than reinvent a worse clipboard.
+
+## Where to try it
+
+Open pi, focus the input line, and:
+
+- **Kill a word** (`Alt-Backspace` / `Alt-D`) — note the deleted text is now on the ring.
+- **Yank** (`Ctrl-Y`) — pastes the most recent kill back.
+- **Yank-pop** (`Alt-Y`) — cycles to an older kill, rotating through the ring.
+- **Undo** (`Ctrl-/`) — steps back through your edits, word by word.
+
+The whole feature lives in two small files (`kill-ring.ts`, `undo-stack.ts`) wired into the [`Input` component](https://github.com/earendil-works/pi/blob/main/packages/tui/src/components/input.ts). If you've ever wondered what "good terminal UX" looks like, it looks like this: a 46-line ring buffer and a 28-line undo stack.
+
+## Notes / things I might still add
+
+- A concrete before/after example of typing a sentence, killing two words, yanking, then yank-pop to swap.
+- A side-by-side of plain clipboard vs. kill ring so the "one slot vs. a ring" contrast lands visually.
+- The "accumulate" path deserves a worked example, because "kill word three times = one entry" is the part that surprises people.
+- Maybe a short nod to the test file — PR #1373 ships 495 lines of input tests, which is quietly the most reassuring number in the whole diff.
