@@ -1,0 +1,41 @@
+---
+title: "Using GNU Stow on macOS to manage your dotfiles"
+publishDate: "28 July 2026"
+slug: "using-gnu-stow-on-macos-to-manage-dotfiles"
+tags: ["mac", "tools"]
+---
+
+The idea behind Stow is simple. You have [a dotfiles repository](https://github.com/guilsa/dotfiles) and you create directories for each package (util) you need a config for. In each directory, you keep version-controlled config files. And you use Stow to apply your symlinks.
+
+```
+dotfiles/
+  vim/
+    .vimrc
+  git/
+    .gitconfig
+  zsh/
+    .zshrc
+```
+
+Then each can be managed independently:
+
+```bash
+stow vim
+stow git
+stow zsh
+```
+
+Here's how it all looks like for me:
+
+```bash
+brew install stow
+git clone https://github.com/guilsa/dotfiles
+cd dotfiles
+stow --simulate --verbose=2 --target="$HOME" vim
+```
+
+If the output looks right, run:
+
+```bash
+stow --verbose=2 --target="$HOME" vim
+```
