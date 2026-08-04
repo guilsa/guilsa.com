@@ -1,97 +1,19 @@
 ---
 draft: false
-title: "Turning CSP Research Into an Engineering Playbook"
+title: "Rolling Out Content Security Policy in Production"
 publishDate: "04 August 2026"
 slug: "turning-csp-research-into-an-engineering-playbook"
 description: "TBD one-line summary"
-tags: ["CSP", "browser security", "pci", "engineering leadership"]
+tags: ["CSP", "browser security", "pci", "devops"]
 ---
 
-At my previous company, I was asked to lead a Content Security Policy initiative as part of our PCI DSS 4.0 readiness work.
+At my previous company, we needed to strengthen an existing Content Security Policy as part of PCI DSS 4.0 readiness. I handled the investigation, implementation, testing, and documentation.
 
-We already had a CSP, but it was not strong enough for where we needed to go. The assignment initially sounded straightforward: improve the policy, reduce our browser attack surface, and prepare the application for a future audit.
+CSP turned out to be less like a normal feature and more like browser-security research. I went back to the specifications, wrote some minimal static HTML + inline :wscript tests, and used them to understand how directives affected script execution, what violation reports contained, and where weak policies created additional attack surface.
 
-It quickly became clear that this would not be a traditional coding project.
+From there, we enabled report-only mode and used production violation data to tighten the policy incrementally. The work included accounting for third-party scripts, maintaining a script inventory through version control and pull-request review, and adding monitoring for unexpected script activity. I also prototyped a nonce-based approach and documented it for possible future adoption.
 
-## CSP is not just a header
+One useful outcome was a CSP style guide based on what we learned. It documented the terminology, rollout process, and policy decisions, and became a reference for reviewing CSP configurations across other services and repositories.
 
-A Content Security Policy is a set of browser-enforced rules that controls which scripts and other resources a page can load or execute.
+The main lesson was that CSP should be treated as an iterative system, not a header added once and forgotten. Start by observing real browser behavior, classify the violations, tighten the policy gradually, and enforce it only when the data supports doing so.
 
-A policy can appear strict while still allowing unsafe behavior. Tightening it too quickly can break legitimate application functionality. Third-party scripts complicate the picture further, especially when an application depends on analytics, payment, support, or marketing integrations.
-
-The project therefore required more than editing a response header. We needed to understand what the application was actually doing in users' browsers before deciding what it should be allowed to do.
-
-## Relearning the browser security model
-
-Leadership helped set timelines and approve the rollout; I handled the investigation, design, implementation, testing, and documentation.
-
-The first step was to verify the browser behavior. I reread the CSP specifications and wrote rudimentary HTML and JavaScript tests to understand how policies worked, how individual directives changed script execution, and what violation reports contained.
-
-This was important because many of the terms were unfamiliar in our normal product-development vocabulary:
-
-* directives
-* violations
-* report URIs
-* ingestion
-* unsafe evaluation
-* script authorization
-* report-only mode
-
-Before we could make good technical decisions, we needed to speak the same language. I created a glossary and supporting documentation so that engineering and leadership could discuss the policy without relying on vague or conflicting interpretations.
-
-That shared vocabulary became one of the most useful outputs of the project.
-
-## Starting with observation, not enforcement
-
-One of the most important decisions was to begin in report-only mode.
-
-In report-only mode, the browser reports policy violations without blocking the affected resources. This gives the team visibility into how the application behaves under a stricter policy before that policy can break production functionality.
-
-The approach initially felt counterintuitive to some stakeholders. If the goal was stronger security, why would we introduce a policy without immediately enforcing it?
-
-Because we did not yet have enough data.
-
-Enforcing an incomplete policy could have broken legitimate application flows while giving us little understanding of what had happened. Report-only mode allowed us to collect evidence, identify expected and unexpected script behavior, and tighten the policy iteratively.
-
-I inspected google.com and saw that enabling both reporting mode and enforcement mode together was possible, and I decided to start with the first.
-
-## Treating CSP as a data problem
-
-Once reporting was enabled, the project became an iterative analysis process. We collected violations, investigated their sources, and separated legitimate application behavior from unnecessary or unsafe allowances. That information guided each revision of the policy.
-
-Our PCI 4 readiness work covered several related concerns:
-
-* strengthening script authorization through a more restrictive policy
-* maintaining a script inventory through version control and pull-request approval
-* monitoring unexpected script activity or possible injection
-* evaluating stronger controls for trusted script execution
-
-I also prototyped a working nonce-based implementation. We did not ship it initially and I left the implementation in the backlog as a concrete path for further hardening.
-
-## Resolving organizational misunderstandings
-
-Some of the hardest parts of security projects are not technical.
-
-For example, there was concern that CSP violation reports were inherently private or sensitive customer information. I helped clarify that the reports were operational browser-security telemetry rather than automatically being sensitive PII, while still treating the data pipeline with the appropriate care.
-
-There were similar discussions around enforcement timing, the meaning of different directives, and what constituted sufficient script inventory and monitoring.
-
-These were reasonable questions. CSP was not part of the organization's everyday vocabulary, and the project crossed frontend, infrastructure, compliance, and leadership boundaries.
-
-## What I learned
-
-The project reinforced a few ideas that now influence how I approach technical leadership.
-
-First, security work often begins with learning rather than implementation. Taking time to read specifications and build small experiments was not a detour from the project. It was the work required to make the implementation trustworthy.
-
-Second, an unfamiliar technical problem often needs shared language before it needs more code. The glossary helped us resolve disagreements that were partly caused by people using the same terms to mean different things.
-
-Third, rollout strategy is part of system design. Report-only mode was not merely a temporary setting. It was what allowed us to replace assumptions with production evidence.
-
-Finally, the best outcome of a technical project is sometimes not the initial implementation. It is the playbook that helps the rest of the organization solve the problem consistently.
-
-That is what made this project especially rewarding: it started as a compliance-readiness task and became a reusable browser-security practice.
-
----
-
-*This blog post was written with AI assistance. I hope you liked it.*
