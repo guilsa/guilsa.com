@@ -9,7 +9,7 @@ tags: ["CSP", "browser security", "pci", "devops"]
 
 At my previous company, we needed to strengthen an existing Content Security Policy as part of PCI DSS 4.0 readiness. I handled the investigation, implementation, testing, and documentation.
 
-CSP turned out to be less like a normal feature and more like browser-security research. I went back to the specifications, wrote some minimal static HTML + inline :wscript tests, and used them to understand how directives affected script execution, what violation reports contained, and where weak policies created additional attack surface.
+CSP turned out to be less like a normal feature and more like browser-security research. I went back to the specifications, wrote small HTML and JavaScript test cases, and used them to understand how directives affected script execution, what violation reports contained, and where weak policies created additional attack surface.
 
 From there, we enabled report-only mode and used production violation data to tighten the policy incrementally. The work included accounting for third-party scripts, maintaining a script inventory through version control and pull-request review, and adding monitoring for unexpected script activity. I also prototyped a nonce-based approach and documented it for possible future adoption.
 
