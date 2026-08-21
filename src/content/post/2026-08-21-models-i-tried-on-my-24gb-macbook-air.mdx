@@ -1,0 +1,29 @@
+---
+title: "Local Models I Tried on a 24GB MacBook Air"
+publishDate: "21 August 2026"
+slug: "models-i-tried-on-my-24gb-macbook-air"
+tags: ["llm", "mac", "ai", "local-models"]
+---
+
+I have been trying local language models on a MacBook Air with 24GB of unified memory.
+
+For token generation, memory bandwidth matters more than total RAM. That is why Apple computers can be faster than other unified-memory platforms: the [13-inch MacBook Air M4](https://www.apple.com/mac/compare/?modelList=MacBook-Air-M4,MacBook-Pro-16-M5-Pro,MacBookPro-13-M2) has 120GB/s of memory bandwidth, while the 16-inch MacBook Pro with M5 Pro—around $2,800 in the US, though Apple’s pricing may change—has about 307GB/s. AMD’s [Strix Halo platform](https://www.amd.com/en/products/processors/desktops/ryzen/ryzen-ai-halo/ryzen-ai-max-plus-395.html) can provide up to 128GB of unified system memory, but its 256GB/s bandwidth is the more relevant number when comparing token-generation speed.
+
+With memory bandwidth in mind, these are the models I recommend for this hardware, in no particular order.
+
+- `unsloth/gemma-4-12B-it-qat-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+- `unsloth/gemma-4-E2B-it-GGUF`
+- `unsloth/gemma-4-E4B-it`
+- `unsloth/Qwen3.5-4B-MTP-GGUF`
+- `unsloth/Qwen3.5-9B-MTP-GGUF`
+
+The Gemma models are better at prose, while the Qwen models are for agentic tasks.
+
+I started with Unsloth because it automatically configured models and tooling particularly well. Tool calling was smooth and never fell into infinite tool-call loops, unlike LM Studio at the time of my May 2026 testing. I did run into an issue with Unsloth that raised possible security concerns about its Python sandbox, though.
+
+I eventually moved to llama.cpp because it gives me a smaller, more focused runtime with fewer moving parts. Since November 2025, it has included a SvelteKit-based WebUI; [see the discussion](https://github.com/ggml-org/llama.cpp/discussions/16938).
+
+For a 24GB MacBook Air M4, I still recommend trying Unsloth’s GGUF models. Their quantizations can offer a strong quality-to-memory tradeoff, and smaller files may generate tokens faster than larger official releases. I would not treat Unsloth as automatically better, though: compare the exact model, quantization, and runtime when an official release is available.
+
+Since Qwen3.8 came out, I’ve been experimenting with llama.cpp’s native model-downloading functionality. That’s the setup I’m a fan of for my 48GB MacBook Pro M5.
