@@ -29,7 +29,15 @@
 	}
 
 	html body {
-		@apply mx-auto flex min-h-screen max-w-3xl flex-col bg-bgColor px-8 pt-16 font-mono text-sm font-normal text-textColor antialiased;
+		@apply mx-auto flex min-h-screen max-w-3xl flex-col bg-bgColor px-8 pt-16 font-normal text-textColor antialiased;
+		font: 11pt/1.5 Avenir, 'Segoe UI', 'Lucida Grande', Lucida, Verdana, sans-serif;
+	}
+
+	code,
+	kbd,
+	samp,
+	pre {
+		font-family: inherit;
 	}
 
 	.bg-logo {
